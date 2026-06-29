@@ -1,0 +1,54 @@
+{
+    "desa": [{
+        "id": "u0sdwLkDRxLM_sYQbqzBl",
+        "ownerUid": "WCQz1CQaI7VrIsu5N09LhpVv4uy1",
+        "updatedBy": "WCQz1CQaI7VrIsu5N09LhpVv4uy1",
+        "updatedAt": "2026-06-28T12:48:59.925Z",
+        "createdAt": "2026-06-28T12:48:59.925Z",
+        "petugas": "Rifki Romadhan",
+        "nama": "Dagan"
+    }],
+    "rt": [{
+        "id": "xNM1tmF7TyT1Tg3rN4GH5",
+        "createdAt": "2026-06-28T12:57:38.961Z",
+        "petugas": "Rifki Romadhan",
+        "updatedAt": "2026-06-28T12:57:38.961Z",
+        "updatedBy": "WCQz1CQaI7VrIsu5N09LhpVv4uy1",
+        "ownerUid": "WCQz1CQaI7VrIsu5N09LhpVv4uy1",
+        "nomor": "3/9",
+        "desaId": "u0sdwLkDRxLM_sYQbqzBl"
+    }],
+    "keluarga": [{
+        "id": "k889nElgHP8Z92pV9ueC9",
+        "catatan": "",
+        "updatedAt": "2026-06-28T12:50:45.042Z",
+        "createdAt": "2026-06-28T12:50:45.042Z",
+        "petugas": "Rifki Romadhan",
+        "alamat": "",
+        "nama": "Sukadi",
+        "pengeluaran": {
+            "arisan": "",
+            "beliBaju": "",
+            "sabun": "250000",
+            "kurban": "",
+            "pbb": "",
+            "cicilan": "",
+            "servisMotor": "",
+            "pulsa": "150000",
+            "air": "",
+            "zakat": "",
+            "jajanRokok": "0",
+            "gas": "",
+            "jimpitan": "21000",
+            "pajakMotor": "",
+            "listrik": "50000",
+            "spp": "",
+            "agustus": "",
+            "rekreasi": "",
+            "berasLauk": "450000"
+        },
+        "updatedBy": "WCQz1CQaI7VrIsu5N09LhpVv4uy1",
+        "rtId": "L2gFfh8OKlkpBx_aQpoC4",
+        "ownerUid": "WCQz1CQaI7VrIsu5N09LhpVv4uy1"
+    }]
+}
