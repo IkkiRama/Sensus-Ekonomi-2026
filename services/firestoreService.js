@@ -104,9 +104,15 @@ export async function saveUserData(uid, data) {
 }
 
 export async function upsertItem(uid, collectionName, item) {
-  await setDoc(doc(db, 'users', uid, collectionName, item.id), item, { merge: true });
+  await Promise.all([
+    setDoc(doc(db, 'users', uid, collectionName, item.id), item, { merge: true }),
+    setDoc(doc(db, `public_${collectionName}`, item.id), item, { merge: true })
+  ]);
 }
 
 export async function removeItem(uid, collectionName, id) {
-  await deleteDoc(doc(db, 'users', uid, collectionName, id));
+  await Promise.all([
+    deleteDoc(doc(db, 'users', uid, collectionName, id)),
+    deleteDoc(doc(db, `public_${collectionName}`, id))
+  ]);
 }

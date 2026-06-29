@@ -7,18 +7,24 @@ import Button from '../../components/ui/Button.jsx';
 import { deleteRt } from '../../redux/rtSlice.js';
 import { deleteKeluarga } from '../../redux/keluargaSlice.js';
 import { confirmDelete } from '../../utils/confirmDelete.js';
+import { removeItem } from '../../services/firestoreService.js';
 
 export default function RT() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const desa = useSelector((state) => state.desa.items.find((item) => item.id === id));
   const rt = useSelector((state) => state.rt.items.filter((item) => item.desaId === id));
   const keluarga = useSelector((state) => state.keluarga.items);
 
   function removeRt(item) {
     if (!confirmDelete(`RT/RW ${item.nomor} beserta keluarga di dalamnya`)) return;
-    keluarga.filter((keluargaItem) => keluargaItem.rtId === item.id).forEach((keluargaItem) => dispatch(deleteKeluarga(keluargaItem.id)));
+    keluarga.filter((keluargaItem) => keluargaItem.rtId === item.id).forEach((keluargaItem) => {
+      dispatch(deleteKeluarga(keluargaItem.id));
+      removeItem(user.uid, 'keluarga', keluargaItem.id).catch(() => {});
+    });
     dispatch(deleteRt(item.id));
+    removeItem(user.uid, 'rt', item.id).catch(() => {});
   }
 
   return (

@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { useAuthListener } from './hooks/useAuthListener.js';
-import { useLocalPersistence } from './hooks/useLocalPersistence.js';
 import { useFirestoreSync } from './hooks/useFirestoreSync.js';
-import { useJsonBackupSync } from './hooks/useJsonBackupSync.js';
 import AppLayout from './components/layout/AppLayout.jsx';
 import PrivateRoute from './components/common/PrivateRoute.jsx';
 import Home from './pages/Home/Home.jsx';
@@ -16,8 +14,6 @@ import Profile from './pages/Profile/Profile.jsx';
 
 export default function App() {
   useAuthListener();
-  useLocalPersistence();
-  useJsonBackupSync();
   useFirestoreSync();
 
   return (

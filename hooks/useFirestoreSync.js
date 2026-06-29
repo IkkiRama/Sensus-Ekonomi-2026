@@ -5,7 +5,10 @@ import { setDesa } from '../redux/desaSlice.js';
 import { setRt } from '../redux/rtSlice.js';
 import { setKeluarga } from '../redux/keluargaSlice.js';
 import { loadUserData, saveUserData } from '../services/firestoreService.js';
-import { hasAnyStoredData, serverEmptyKey } from './syncKeys.js';
+
+function hasAnyStoredData(data) {
+  return Boolean(data?.desa?.length || data?.rt?.length || data?.keluarga?.length);
+}
 
 export function useFirestoreSync() {
   const dispatch = useDispatch();
@@ -21,32 +24,32 @@ export function useFirestoreSync() {
   }));
 
   useEffect(() => {
+    localStorage.removeItem('se2026_local_data');
+  }, []);
+
+  useEffect(() => {
     if (!user?.uid) {
       loadedUid.current = '';
       hasSeenData.current = false;
+      dispatch(setDesa([]));
+      dispatch(setRt([]));
+      dispatch(setKeluarga([]));
       return undefined;
     }
 
     let active = true;
     isHydrating.current = true;
 
-    if (sessionStorage.getItem(serverEmptyKey(user.uid)) === '1') {
-      loadedUid.current = user.uid;
-      isHydrating.current = false;
-      return undefined;
-    }
-
     loadUserData(user.uid)
       .then((cloudData) => {
         if (!active) return;
-        if (!hasAnyStoredData(cloudData)) return;
-        hasSeenData.current = true;
-        dispatch(setDesa(cloudData.desa));
-        dispatch(setRt(cloudData.rt));
-        dispatch(setKeluarga(cloudData.keluarga));
+        hasSeenData.current = hasAnyStoredData(cloudData);
+        dispatch(setDesa(cloudData.desa || []));
+        dispatch(setRt(cloudData.rt || []));
+        dispatch(setKeluarga(cloudData.keluarga || []));
       })
-      .catch(() => {
-        // Local mode remains available when Firebase env/firestore rules are not ready.
+      .catch((error) => {
+        console.error('Gagal mengambil data Firestore:', error);
       })
       .finally(() => {
         if (active) loadedUid.current = user.uid;
@@ -61,7 +64,6 @@ export function useFirestoreSync() {
   useEffect(() => {
     if (hasAnyStoredData(data)) {
       hasSeenData.current = true;
-      if (user?.uid) sessionStorage.removeItem(serverEmptyKey(user.uid));
     }
     if (!user?.uid || loadedUid.current !== user.uid || isHydrating.current) return undefined;
     if (!hasAnyStoredData(data) && !hasSeenData.current) return undefined;

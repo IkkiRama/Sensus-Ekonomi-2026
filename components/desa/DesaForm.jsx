@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addDesa } from '../../redux/desaSlice.js';
 import { showToast } from '../../redux/uiSlice.js';
 import Button from '../ui/Button.jsx';
+import { upsertItem } from '../../services/firestoreService.js';
 
 export default function DesaForm() {
   const [nama, setNama] = useState('');
@@ -13,7 +14,11 @@ export default function DesaForm() {
   function submit(event) {
     event.preventDefault();
     if (!nama.trim()) return;
-    dispatch(addDesa(nama.trim(), user));
+    const action = addDesa(nama.trim(), user);
+    dispatch(action);
+    upsertItem(user.uid, 'desa', action.payload).catch(() => {
+      dispatch(showToast('Gagal menyimpan desa ke Firebase'));
+    });
     dispatch(showToast('Desa ditambahkan'));
     setNama('');
   }

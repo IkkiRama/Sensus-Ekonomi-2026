@@ -8,6 +8,7 @@ import { deleteDesa } from '../../redux/desaSlice.js';
 import { deleteRt } from '../../redux/rtSlice.js';
 import { deleteKeluarga } from '../../redux/keluargaSlice.js';
 import { confirmDelete } from '../../utils/confirmDelete.js';
+import { removeItem } from '../../services/firestoreService.js';
 
 export default function Desa() {
   const dispatch = useDispatch();
@@ -19,9 +20,16 @@ export default function Desa() {
   function removeDesa(item) {
     if (!confirmDelete(`desa ${item.nama} beserta RT dan keluarga di dalamnya`)) return;
     const rtIds = rt.filter((rtItem) => rtItem.desaId === item.id).map((rtItem) => rtItem.id);
-    keluarga.filter((keluargaItem) => rtIds.includes(keluargaItem.rtId)).forEach((keluargaItem) => dispatch(deleteKeluarga(keluargaItem.id)));
-    rtIds.forEach((rtId) => dispatch(deleteRt(rtId)));
+    keluarga.filter((keluargaItem) => rtIds.includes(keluargaItem.rtId)).forEach((keluargaItem) => {
+      dispatch(deleteKeluarga(keluargaItem.id));
+      removeItem(user.uid, 'keluarga', keluargaItem.id).catch(() => {});
+    });
+    rtIds.forEach((rtId) => {
+      dispatch(deleteRt(rtId));
+      removeItem(user.uid, 'rt', rtId).catch(() => {});
+    });
     dispatch(deleteDesa(item.id));
+    removeItem(user.uid, 'desa', item.id).catch(() => {});
   }
 
   return (

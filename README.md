@@ -1,6 +1,6 @@
 # SE2026
 
-Aplikasi pendataan sosial ekonomi berbasis React, Redux Toolkit, Firebase, Express, JSON backup, PWA, responsive UI, dan dark mode.
+Aplikasi pendataan sosial ekonomi berbasis React, Redux Toolkit, Firebase Auth, Firestore, PWA, responsive UI, dan dark mode.
 
 ## Fitur
 
@@ -10,8 +10,7 @@ Aplikasi pendataan sosial ekonomi berbasis React, Redux Toolkit, Firebase, Expre
 - Hak akses owner berbasis `uid`.
 - Form pengeluaran dengan input Rupiah, angka saja, hitung otomatis, dan copy hasil.
 - Search realtime dan filter Desa, RT, Petugas.
-- Export dan import JSON.
-- Backend Express untuk backup JSON per user di `data/{uid}.json`.
+- Data langsung dibaca dan disimpan ke Firebase Firestore.
 - PWA melalui `vite-plugin-pwa`.
 - Responsive dan dark mode.
 
@@ -26,8 +25,7 @@ npm install
 1. Buat project Firebase.
 2. Aktifkan Authentication Google.
 3. Buat file `.env` dari `.env.example`.
-4. Buat service account Firebase Admin.
-5. Isi bagian Firebase Admin di `.env` yang sama.
+4. Isi konfigurasi web app Firebase ke `.env`.
 
 ## Menjalankan Development
 
@@ -36,7 +34,6 @@ npm run dev
 ```
 
 Frontend berjalan di `http://localhost:5173`.
-Backend berjalan di `http://localhost:4000`.
 
 ## Struktur Firestore Yang Direkomendasikan
 
@@ -58,4 +55,3 @@ Pakai `firestore.rules` di root project agar user login bisa membaca semua data 
 
 - Firebase Hosting: jalankan `npm run build`, lalu deploy folder `dist`.
 - Vercel: deploy root project ini.
-- Server Express dapat dipasang di layanan Node.js seperti Cloud Run, Railway, Render, atau VPS.

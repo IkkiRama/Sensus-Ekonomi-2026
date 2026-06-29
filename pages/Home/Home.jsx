@@ -27,7 +27,7 @@ export default function Home() {
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {[
               ['Realtime', 'Search dan filter langsung terasa.'],
-              ['Backup', 'JSON server dan Firestore.'],
+              ['Firebase', 'Data langsung tersimpan di Firestore.'],
               ['Mobile', 'Nyaman dipakai dari HP.']
             ].map(([title, text]) => (
               <div key={title} className="rounded border border-slate-200 p-3 dark:border-slate-800">
@@ -41,7 +41,7 @@ export default function Home() {
           {[
             ['CRUD Bertingkat', 'Desa, RT/RW, dan keluarga tersusun rapi.'],
             ['Hitung Otomatis', 'Makan mingguan, bulanan, non makan, dan tahunan.'],
-            ['Backup', 'Data user dapat dipulihkan dari server JSON.']
+            ['Cloud Data', 'Data user diambil langsung dari Firebase.']
           ].map(([title, text]) => (
             <div key={title} className="flex gap-3 rounded border border-slate-200 p-3 dark:border-slate-800">
               <CheckCircle2 className="text-success" size={22} />

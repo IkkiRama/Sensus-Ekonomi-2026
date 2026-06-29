@@ -6,6 +6,7 @@ import { showToast } from '../../redux/uiSlice.js';
 import Button from '../ui/Button.jsx';
 import PengeluaranForm from '../pengeluaran/PengeluaranForm.jsx';
 import { defaultPengeluaran } from '../../utils/pengeluaran.js';
+import { upsertItem } from '../../services/firestoreService.js';
 
 export default function KeluargaForm({ rtId, keluarga, onDone, showPengeluaran = false }) {
   const dispatch = useDispatch();
@@ -25,10 +26,18 @@ export default function KeluargaForm({ rtId, keluarga, onDone, showPengeluaran =
     event.preventDefault();
     if (!form.nama.trim()) return;
     if (keluarga) {
-      dispatch(updateKeluarga({ ...keluarga, ...form, updatedBy: user.uid }));
+      const payload = { ...keluarga, ...form, updatedAt: new Date().toISOString(), updatedBy: user.uid };
+      dispatch(updateKeluarga(payload));
+      upsertItem(user.uid, 'keluarga', payload).catch(() => {
+        dispatch(showToast('Gagal menyimpan keluarga ke Firebase'));
+      });
       dispatch(showToast('Keluarga diperbarui'));
     } else {
-      dispatch(addKeluarga(rtId, form, user));
+      const action = addKeluarga(rtId, form, user);
+      dispatch(action);
+      upsertItem(user.uid, 'keluarga', action.payload).catch(() => {
+        dispatch(showToast('Gagal menyimpan keluarga ke Firebase'));
+      });
       dispatch(showToast('Keluarga ditambahkan'));
       setForm({ nama: '', alamat: '', catatan: '', pengeluaran: defaultPengeluaran });
     }

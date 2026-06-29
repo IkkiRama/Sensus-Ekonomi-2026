@@ -9,6 +9,7 @@ import { deleteKeluarga } from '../../redux/keluargaSlice.js';
 import { formatRupiah } from '../../utils/rupiah.js';
 import { hitungPengeluaran } from '../../utils/pengeluaran.js';
 import { confirmDelete } from '../../utils/confirmDelete.js';
+import { removeItem } from '../../services/firestoreService.js';
 
 export default function Keluarga() {
   const { id } = useParams();
@@ -16,6 +17,7 @@ export default function Keluarga() {
   const [editing, setEditing] = useState(null);
   const [pengeluaranId, setPengeluaranId] = useState('');
   const [query, setQuery] = useState('');
+  const user = useSelector((state) => state.auth.user);
   const rt = useSelector((state) => state.rt.items.find((item) => item.id === id));
   const keluarga = useSelector((state) =>
     state.keluarga.items
@@ -61,7 +63,9 @@ export default function Keluarga() {
                   <Button
                     variant="danger"
                     onClick={() => {
-                      if (confirmDelete(`keluarga ${item.nama}`)) dispatch(deleteKeluarga(item.id));
+                      if (!confirmDelete(`keluarga ${item.nama}`)) return;
+                      dispatch(deleteKeluarga(item.id));
+                      removeItem(user.uid, 'keluarga', item.id).catch(() => {});
                     }}
                   >
                     <Trash2 size={18} /> Hapus

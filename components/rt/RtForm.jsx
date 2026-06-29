@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addRt } from '../../redux/rtSlice.js';
 import { showToast } from '../../redux/uiSlice.js';
 import Button from '../ui/Button.jsx';
+import { upsertItem } from '../../services/firestoreService.js';
 
 export default function RtForm({ desaId }) {
   const [nomor, setNomor] = useState('');
@@ -28,7 +29,11 @@ export default function RtForm({ desaId }) {
       return;
     }
 
-    dispatch(addRt(desaId, `${Number(rt)}/${Number(rw)}`, user));
+    const action = addRt(desaId, `${Number(rt)}/${Number(rw)}`, user);
+    dispatch(action);
+    upsertItem(user.uid, 'rt', action.payload).catch(() => {
+      dispatch(showToast('Gagal menyimpan RT/RW ke Firebase'));
+    });
     dispatch(showToast('RT ditambahkan'));
     setNomor('');
   }
