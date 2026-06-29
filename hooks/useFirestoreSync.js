@@ -24,10 +24,6 @@ export function useFirestoreSync() {
   }));
 
   useEffect(() => {
-    localStorage.removeItem('se2026_local_data');
-  }, []);
-
-  useEffect(() => {
     if (!user?.uid) {
       loadedUid.current = '';
       hasSeenData.current = false;
