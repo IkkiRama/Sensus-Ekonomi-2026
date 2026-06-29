@@ -12,6 +12,13 @@ function mergeById(primary, fallback) {
   return Array.from(items.values());
 }
 
+function mergeByIdWithPathData(primary, fallback) {
+  const items = new Map();
+  for (const item of fallback) items.set(item.id, item);
+  for (const item of primary) items.set(item.id, { ...(items.get(item.id) || {}), ...item });
+  return Array.from(items.values());
+}
+
 async function loadNestedUserData(uid) {
   const desaSnapshot = await getDocs(userCollection(uid, 'desa'));
   const desa = desaSnapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
@@ -22,15 +29,15 @@ async function loadNestedUserData(uid) {
     const rtSnapshot = await getDocs(collection(db, 'users', uid, 'desa', desaItem.id, 'rt'));
 
     for (const rtDoc of rtSnapshot.docs) {
-      const rtItem = { id: rtDoc.id, desaId: desaItem.id, ...rtDoc.data() };
+      const rtItem = { id: rtDoc.id, ...rtDoc.data(), desaId: desaItem.id };
       rt.push(rtItem);
 
       const keluargaSnapshot = await getDocs(collection(db, 'users', uid, 'desa', desaItem.id, 'rt', rtDoc.id, 'keluarga'));
       keluarga.push(
         ...keluargaSnapshot.docs.map((item) => ({
           id: item.id,
-          rtId: rtDoc.id,
-          ...item.data()
+          ...item.data(),
+          rtId: rtDoc.id
         }))
       );
     }
@@ -61,8 +68,8 @@ export async function loadUserData(uid) {
 
   return {
     desa: mergeById(mergeById(privateData.desa, nestedData.desa), publicOwnerData.desa),
-    rt: mergeById(mergeById(privateData.rt, nestedData.rt), publicOwnerData.rt),
-    keluarga: mergeById(mergeById(privateData.keluarga, nestedData.keluarga), publicOwnerData.keluarga)
+    rt: mergeByIdWithPathData(nestedData.rt, mergeById(privateData.rt, publicOwnerData.rt)),
+    keluarga: mergeByIdWithPathData(nestedData.keluarga, mergeById(privateData.keluarga, publicOwnerData.keluarga))
   };
 }
 
